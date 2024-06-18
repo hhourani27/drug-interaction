@@ -11,6 +11,9 @@ export const styles = StyleSheet.create({
     gap: 10,
     padding: 20,
   },
+  buttonPressed: {
+    backgroundColor: "#F6E7E5",
+  },
   iconPart: {
     flex: 1 / 3,
     flexDirection: "row",

@@ -5,7 +5,10 @@ import { styles } from "../styles/button_styles";
 export function DrugInteractionButton({}) {
   return (
     <Pressable
-      style={styles.button}
+      style={({ pressed }) => [
+        styles.button,
+        pressed ? styles.buttonPressed : null,
+      ]}
       onPress={() => alert("You pressed a button.")}
     >
       <View style={styles.iconPart}>
