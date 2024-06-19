@@ -7,7 +7,9 @@ export function DrugInteractionsPage() {
 
   return (
     <View style={styles.container}>
-      <DrugInputAutocomplete />
+      <DrugInputAutocomplete
+        onValueSelect={(value) => setSelectedOption(value)}
+      />
       <Text style={styles.title}>{selectedOption}</Text>
     </View>
   );

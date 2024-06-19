@@ -4,7 +4,7 @@ import {
   View,
   TextInput,
   FlatList,
-  Item,
+  Pressable,
 } from "react-native";
 import { useState } from "react";
 
@@ -22,13 +22,31 @@ export function DrugInputAutocomplete({ onValueSelect }) {
 
   const dropdownItems = filter();
 
+  const renderItem = (item) => {
+    return (
+      <Pressable
+        style={({ pressed }) => [
+          styles.dropdownItem,
+          pressed ? styles.dropdownItemPressed : null,
+        ]}
+        onPress={() => {
+          onValueSelect(item);
+          setQuery("");
+        }}
+      >
+        <Text>{item}</Text>
+      </Pressable>
+    );
+  };
+
   return (
     <View style={styles.autocompleteContainer}>
       <TextInput style={styles.input} value={query} onChangeText={setQuery} />
       {dropdownItems.length > 0 && (
         <FlatList
+          style={styles.dropdownlist}
           data={dropdownItems}
-          renderItem={({ item }) => <Text>{item}</Text>}
+          renderItem={({ item }) => renderItem(item)}
           keyExtractor={(item) => item}
         />
       )}
@@ -37,11 +55,39 @@ export function DrugInputAutocomplete({ onValueSelect }) {
 }
 
 const styles = StyleSheet.create({
-  autocompleteContainer: {},
+  autocompleteContainer: { position: "relative" },
   input: {
     height: 40,
+    borderRadius: 10,
     width: "100%",
     borderWidth: 1,
+    borderColor: "#343047",
     padding: 10,
+  },
+  dropdownlist: {
+    position: "absolute",
+    top: "100%",
+    left: 0,
+    right: 0,
+
+    width: "100%",
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#F6F6F6",
+    opacity: 1,
+    zIndex: 1000,
+  },
+
+  dropdownItem: {
+    height: 50,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
+    justifyContent: "center",
+    paddingLeft: 10,
+  },
+
+  dropdownItemPressed: {
+    backgroundColor: "#F6E7E5",
   },
 });
