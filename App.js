@@ -2,8 +2,11 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { DrugInteractionButton } from "./components/DrugInteractionButton";
 import { FoodInteractionButton } from "./components/FoodInteractionButton";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { DrugInteractionsPage } from "./pages/DrugInteractionsPage";
 
-export default function App() {
+function HomePage({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -12,7 +15,9 @@ export default function App() {
           <Text style={styles.subtitle}>Pick a page</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <DrugInteractionButton />
+          <DrugInteractionButton
+            onPress={() => navigation.navigate("Drug Interactions")}
+          />
           <FoodInteractionButton />
         </View>
       </View>
@@ -51,3 +56,19 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 });
+
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomePage} />
+        <Stack.Screen
+          name="Drug Interactions"
+          component={DrugInteractionsPage}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

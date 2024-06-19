@@ -2,14 +2,14 @@ import { View, Pressable, Text } from "react-native";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { styles } from "../styles/button_styles";
 
-export function DrugInteractionButton({}) {
+export function DrugInteractionButton({ onPress }) {
   return (
     <Pressable
       style={({ pressed }) => [
         styles.button,
         pressed ? styles.buttonPressed : null,
       ]}
-      onPress={() => alert("You pressed a button.")}
+      onPress={onPress}
     >
       <View style={styles.iconPart}>
         <FontAwesome5
