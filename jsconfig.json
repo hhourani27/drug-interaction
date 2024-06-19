@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // or "ES2020"
+    "module": "commonjs", // or "ESNext"
+    "checkJs": true,
+    "jsx": "react" // If you're using React
+  },
+  "include": ["./**/*"] // Adjust according to your project structure
+}

@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import { useState } from "react";
 import { DrugInputAutocomplete } from "../components/DrugInputAutocomplete";
@@ -10,7 +11,7 @@ export function DrugInteractionsPage() {
       <DrugInputAutocomplete
         onValueSelect={(value) => setSelectedOption(value)}
       />
-      <Text style={styles.title}>{selectedOption}</Text>
+      <Text>{selectedOption}</Text>
     </View>
   );
 }
@@ -20,7 +21,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "stretch",
-    justifyContent: "start",
 
     padding: 20,
   },

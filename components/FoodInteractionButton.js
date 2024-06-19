@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Pressable, Text } from "react-native";
 import { FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import { styles } from "../styles/button_styles";

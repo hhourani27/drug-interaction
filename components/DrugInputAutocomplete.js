@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -6,21 +7,34 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export function DrugInputAutocomplete({ onValueSelect }) {
   const [query, setQuery] = useState("");
+  const [drugOptions, setDrugOptions] = useState([]);
 
-  const data = ["Apple", "Banana", "Cherry", "Date"];
+  const fetchAndSetDrugs = useCallback(async (queryString) => {
+    if (queryString.length < 2) {
+      setDrugOptions([]);
+    } else {
+      try {
+        const response = await fetch(
+          `https://go.drugbank.com/interaction_concept_search?term=${queryString}&_type=query&q=${queryString}`
+        );
+        const json = await response.json(); // Await JSON parsing
+        const drugs = json.map((v) => v.name);
 
-  const filter = () => {
-    if (query === "") return [];
-    return data.filter((item) =>
-      item.toLowerCase().includes(query.toLowerCase())
-    );
-  };
+        setDrugOptions(drugs);
+      } catch (error) {
+        console.error("Error fetching drug options:", error);
+        setDrugOptions([]);
+      }
+    }
+  }, []);
 
-  const dropdownItems = filter();
+  useEffect(() => {
+    fetchAndSetDrugs(query);
+  }, [query, fetchAndSetDrugs]);
 
   const renderItem = (item) => {
     return (
@@ -42,10 +56,10 @@ export function DrugInputAutocomplete({ onValueSelect }) {
   return (
     <View style={styles.autocompleteContainer}>
       <TextInput style={styles.input} value={query} onChangeText={setQuery} />
-      {dropdownItems.length > 0 && (
+      {drugOptions.length > 0 && (
         <FlatList
           style={styles.dropdownlist}
-          data={dropdownItems}
+          data={drugOptions}
           renderItem={({ item }) => renderItem(item)}
           keyExtractor={(item) => item}
         />
@@ -71,6 +85,7 @@ const styles = StyleSheet.create({
     right: 0,
 
     width: "100%",
+    height: 200,
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#F6F6F6",
@@ -79,7 +94,7 @@ const styles = StyleSheet.create({
   },
 
   dropdownItem: {
-    height: 50,
+    minHeight: 50,
     display: "flex",
     flexDirection: "column",
     alignItems: "stretch",
