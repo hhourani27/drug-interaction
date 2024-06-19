@@ -6,27 +6,32 @@ import {
   TextInput,
   FlatList,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 
 export function DrugInputAutocomplete({ onValueSelect }) {
   const [query, setQuery] = useState("");
   const [drugOptions, setDrugOptions] = useState([]);
+  const [loadingDrugOptions, setLoadingDrugOptions] = useState(false);
 
   const fetchAndSetDrugs = useCallback(async (queryString) => {
     if (queryString.length < 2) {
       setDrugOptions([]);
     } else {
       try {
+        setLoadingDrugOptions(true);
         const response = await fetch(
           `https://go.drugbank.com/interaction_concept_search?term=${queryString}&_type=query&q=${queryString}`
         );
         const json = await response.json(); // Await JSON parsing
         const drugs = json.map((v) => v.name);
 
+        setLoadingDrugOptions(false);
         setDrugOptions(drugs);
       } catch (error) {
         console.error("Error fetching drug options:", error);
+        setLoadingDrugOptions(false);
         setDrugOptions([]);
       }
     }
@@ -56,13 +61,19 @@ export function DrugInputAutocomplete({ onValueSelect }) {
   return (
     <View style={styles.autocompleteContainer}>
       <TextInput style={styles.input} value={query} onChangeText={setQuery} />
-      {drugOptions.length > 0 && (
-        <FlatList
-          style={styles.dropdownlist}
-          data={drugOptions}
-          renderItem={({ item }) => renderItem(item)}
-          keyExtractor={(item) => item}
-        />
+      {!loadingDrugOptions ? (
+        drugOptions.length > 0 && (
+          <FlatList
+            style={styles.dropdownlist}
+            data={drugOptions}
+            renderItem={({ item }) => renderItem(item)}
+            keyExtractor={(item) => item}
+          />
+        )
+      ) : (
+        <View style={styles.dropdownlist}>
+          <ActivityIndicator style={styles.spinner} />
+        </View>
       )}
     </View>
   );
@@ -104,5 +115,9 @@ const styles = StyleSheet.create({
 
   dropdownItemPressed: {
     backgroundColor: "#F6E7E5",
+  },
+
+  spinner: {
+    paddingTop: 20,
   },
 });
