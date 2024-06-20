@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 
-export function DrugInputAutocomplete({ onValueSelect }) {
+export function DrugInputAutocomplete({ onDrugSelect }) {
   const [query, setQuery] = useState("");
   const [drugOptions, setDrugOptions] = useState([]);
   const [loadingDrugOptions, setLoadingDrugOptions] = useState(false);
@@ -25,7 +25,7 @@ export function DrugInputAutocomplete({ onValueSelect }) {
           `https://go.drugbank.com/interaction_concept_search?term=${queryString}&_type=query&q=${queryString}`
         );
         const json = await response.json(); // Await JSON parsing
-        const drugs = json.map((v) => v.name);
+        const drugs = json.map((d) => ({ id: d.drugbank_pcid, name: d.name }));
 
         setLoadingDrugOptions(false);
         setDrugOptions(drugs);
@@ -41,7 +41,7 @@ export function DrugInputAutocomplete({ onValueSelect }) {
     fetchAndSetDrugs(query);
   }, [query, fetchAndSetDrugs]);
 
-  const renderItem = (item) => {
+  const renderItem = (drug) => {
     return (
       <Pressable
         style={({ pressed }) => [
@@ -49,11 +49,11 @@ export function DrugInputAutocomplete({ onValueSelect }) {
           pressed ? styles.dropdownItemPressed : null,
         ]}
         onPress={() => {
-          onValueSelect(item);
+          onDrugSelect(drug);
           setQuery("");
         }}
       >
-        <Text>{item}</Text>
+        <Text>{drug.name}</Text>
       </Pressable>
     );
   };
@@ -67,7 +67,7 @@ export function DrugInputAutocomplete({ onValueSelect }) {
             style={styles.dropdownlist}
             data={drugOptions}
             renderItem={({ item }) => renderItem(item)}
-            keyExtractor={(item) => item}
+            keyExtractor={(item) => item.id}
           />
         )
       ) : (

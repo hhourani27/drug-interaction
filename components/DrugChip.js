@@ -2,16 +2,16 @@ import React from "react";
 import { StyleSheet, Text, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
-export function DrugChip({ drug, onDelete }) {
+export function DrugChip({ drugName, onDelete }) {
   return (
     <Pressable
       style={({ pressed }) => [
         styles.drugChip,
         pressed ? styles.chipPressed : null,
       ]}
-      onPress={() => onDelete(drug)}
+      onPress={() => onDelete(drugName)}
     >
-      <Text>{drug}</Text>
+      <Text>{drugName}</Text>
       <Entypo name="circle-with-cross" size={16} style={styles.deleteIcon} />
     </Pressable>
   );
