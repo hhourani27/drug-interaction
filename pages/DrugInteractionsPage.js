@@ -1,17 +1,32 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
-import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useState, useEffect } from "react";
 import { DrugInputAutocomplete } from "../components/DrugInputAutocomplete";
+import { DrugChip } from "../components/DrugChip";
 
 export function DrugInteractionsPage() {
-  const [selectedOption, setSelectedOption] = useState("Empty");
+  const [selectedDrugs, setSelectedDrugs] = useState([]);
 
   return (
     <View style={styles.container}>
-      <DrugInputAutocomplete
-        onValueSelect={(value) => setSelectedOption(value)}
-      />
-      <Text>{selectedOption}</Text>
+      <View style={styles.drugSection}>
+        <DrugInputAutocomplete
+          onValueSelect={(value) =>
+            setSelectedDrugs((state) => [...state, value])
+          }
+        />
+        <View style={styles.selectedDrugList}>
+          {selectedDrugs.map((drug) => (
+            <DrugChip
+              key={drug}
+              drug={drug}
+              onDelete={(drug) => {
+                setSelectedDrugs((state) => state.filter((v) => v !== drug));
+              }}
+            />
+          ))}
+        </View>
+      </View>
     </View>
   );
 }
@@ -24,4 +39,14 @@ const styles = StyleSheet.create({
 
     padding: 20,
   },
+  drugSection: {
+    gap: 10,
+  },
+  selectedDrugList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    rowGap: 5,
+    columnGap: 10,
+  },
+  resultSection: {},
 });
