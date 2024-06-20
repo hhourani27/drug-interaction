@@ -89,7 +89,11 @@ export function DrugInteractionsPage() {
     <View style={styles.container}>
       <View style={styles.drugSection}>
         <DrugInputAutocomplete
-          onDrugSelect={(drug) => setSelectedDrugs((state) => [...state, drug])}
+          onDrugSelect={(drug) => {
+            if (!selectedDrugs.find((d) => d.id === drug.id)) {
+              setSelectedDrugs((state) => [...state, drug]);
+            }
+          }}
         />
         <View style={styles.selectedDrugList}>
           {selectedDrugs.map((drug) => (
