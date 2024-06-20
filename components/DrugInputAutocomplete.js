@@ -8,32 +8,48 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export function DrugInputAutocomplete({ onDrugSelect }) {
   const [query, setQuery] = useState("");
   const [drugOptions, setDrugOptions] = useState([]);
   const [loadingDrugOptions, setLoadingDrugOptions] = useState(false);
+  const abortControllerRef = useRef(null); // Ref to store the current AbortController
 
   const fetchAndSetDrugs = useCallback(async (queryString) => {
     if (queryString.length < 2) {
       setDrugOptions([]);
-    } else {
-      try {
-        setLoadingDrugOptions(true);
-        const response = await fetch(
-          `https://go.drugbank.com/interaction_concept_search?term=${queryString}&_type=query&q=${queryString}`
-        );
-        const json = await response.json(); // Await JSON parsing
-        const drugs = json.map((d) => ({ id: d.drugbank_pcid, name: d.name }));
+      return;
+    }
 
-        setLoadingDrugOptions(false);
-        setDrugOptions(drugs);
-      } catch (error) {
-        console.error("Error fetching drug options:", error);
-        setLoadingDrugOptions(false);
-        setDrugOptions([]);
+    // Abort any ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create a new AbortController
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    try {
+      setLoadingDrugOptions(true);
+      const response = await fetch(
+        `https://go.drugbank.com/interaction_concept_search?term=${queryString}&_type=query&q=${queryString}`,
+        { signal: controller.signal }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+
+      const json = await response.json(); // Await JSON parsing
+      const drugs = json.map((d) => ({ id: d.drugbank_pcid, name: d.name }));
+
+      setLoadingDrugOptions(false);
+      setDrugOptions(drugs);
+    } catch (error) {
+      setLoadingDrugOptions(false);
+      setDrugOptions([]);
     }
   }, []);
 
