@@ -1,8 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { DrugInputAutocomplete } from "../components/DrugInputAutocomplete";
 import { DrugChip } from "../components/DrugChip";
+import * as cheerio from "cheerio";
+import { InteractionBox } from "../components/InteractionBox";
 
 export function DrugInteractionsPage() {
   const [selectedDrugs, setSelectedDrugs] = useState([]);
@@ -17,20 +26,53 @@ export function DrugInteractionsPage() {
         setLoadingInteractions(true);
 
         // Create request
-        // const encodedFormBody = selectedDrugs.reduce((acc,curr) => )
+        const encodedFormBody = selectedDrugs
+          .reduce(
+            (acc, curr) => [
+              ...acc,
+              `${encodeURIComponent(
+                "product_concept_ids[]"
+              )}=${encodeURIComponent(curr.id)}`,
+              `${encodeURIComponent(
+                "product_concept_names[]"
+              )}=${encodeURIComponent(curr.name)}`,
+            ],
+            []
+          )
+          .join("&");
 
-        // const response = await fetch(
-        //   `https://go.drugbank.com/interaction_concept_search?term=${queryString}&_type=query&q=${queryString}`
-        // );
-        // const responseText = await response.text(); // Await JSON parsing
-        // console.log(responseText);
+        console.log(encodedFormBody);
+
+        // Send request
+        const response = await fetch(
+          `https://go.drugbank.com/drug-interaction-checker`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: encodedFormBody,
+          }
+        );
+        const responseText = await response.text();
+
+        // Parse and extract interaction data
+        const $ = cheerio.load(responseText);
+        const interactions = $(".interactions-box")
+          .map((idx, elem) => ({
+            drug1: $(elem).find(".subject").text(),
+            drug2: $(elem).find(".affected").text(),
+            severity: $(elem).find(".severity-badge").text(),
+            description: $(elem).find(".description p").text(),
+          }))
+          .toArray();
 
         setLoadingInteractions(false);
-        setInteractions(null); // TODO: change that
+        setInteractions(interactions); // TODO: change that
       } catch (error) {
         console.error("Error fetching drug options:", error);
         setLoadingInteractions(false);
-        setInteractions(null); // TODO: change that
+        setInteractions(interactions); // TODO: change that
       }
     }
   }, []);
@@ -64,9 +106,13 @@ export function DrugInteractionsPage() {
         </View>
       </View>
       <View style={styles.interactionSection}>
-        {!loadingInteractions ? null : (
+        {loadingInteractions ? (
           <ActivityIndicator style={styles.spinner} />
-        )}
+        ) : interactions && interactions.length > 0 ? (
+          interactions.map((int, idx) => (
+            <InteractionBox key={`interaction-${idx}`} interaction={int} />
+          ))
+        ) : null}
       </View>
     </View>
   );
@@ -77,11 +123,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "stretch",
+    gap: 20,
 
     padding: 20,
   },
   drugSection: {
     gap: 10,
+    flexGrow: 0,
   },
   selectedDrugList: {
     flexDirection: "row",
@@ -89,9 +137,17 @@ const styles = StyleSheet.create({
     rowGap: 5,
     columnGap: 10,
   },
-  resultSection: {},
 
-  interactionSection: {},
+  interactionSection: {
+    borderTopColor: "#F9533B",
+    borderTopWidth: 1,
+    gap: 10,
+    paddingTop: 10,
+
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+  },
 
   spinner: { paddingTop: 20 },
 });
