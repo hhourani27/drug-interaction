@@ -109,9 +109,11 @@ export function DrugInteractionsPage() {
         {loadingInteractions ? (
           <ActivityIndicator style={styles.spinner} />
         ) : interactions && interactions.length > 0 ? (
-          interactions.map((int, idx) => (
-            <InteractionBox key={`interaction-${idx}`} interaction={int} />
-          ))
+          <FlatList
+            contentContainerStyle={{ gap: 10 }}
+            data={interactions}
+            renderItem={({ item }) => <InteractionBox interaction={item} />}
+          />
         ) : null}
       </View>
     </View>
@@ -141,12 +143,7 @@ const styles = StyleSheet.create({
   interactionSection: {
     borderTopColor: "#F9533B",
     borderTopWidth: 1,
-    gap: 10,
     paddingTop: 10,
-
-    display: "flex",
-    flexDirection: "column",
-    flexGrow: 1,
   },
 
   spinner: { paddingTop: 20 },
