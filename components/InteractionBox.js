@@ -4,7 +4,12 @@ import { FontAwesome6 } from "@expo/vector-icons";
 
 export function InteractionBox({ interaction }) {
   return (
-    <View style={[styles.interactionBox, styles[interaction.severity]]}>
+    <View
+      style={[
+        styles.interactionBox,
+        { borderColor: getColorFromSeverity(interaction.severity) },
+      ]}
+    >
       <View style={styles.interactionHeader}>
         <Text style={styles.drugName}>{interaction.drug1}</Text>
         <FontAwesome6
@@ -17,11 +22,29 @@ export function InteractionBox({ interaction }) {
         </Text>
       </View>
       <View style={styles.interactionDescription}>
-        <Text style={{ fontStyle: "italic" }}>{interaction.description}</Text>
+        <Text style={{ fontStyle: "italic" }}>
+          <Text
+            style={{ color: getColorFromSeverity(interaction.severity) }}
+          >{`[${interaction.severity}] `}</Text>
+          <Text>{interaction.description}</Text>
+        </Text>
       </View>
     </View>
   );
 }
+
+const getColorFromSeverity = (severity) => {
+  switch (severity) {
+    case "minor":
+      return "limegreen";
+    case "moderate":
+      return "orange";
+    case "major":
+      return "red";
+
+      return "";
+  }
+};
 
 const styles = StyleSheet.create({
   interactionBox: {
@@ -32,16 +55,13 @@ const styles = StyleSheet.create({
     padding: 10,
     gap: 10,
   },
-  minor: { borderColor: "limegreen" },
-  moderate: { borderColor: "orange" },
-  major: { borderColor: "red" },
 
   interactionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  drugName: { flex: 1, flexWrap: "wrap" },
+  drugName: { flex: 1, flexWrap: "wrap", fontWeight: "500" },
   interactionArrow: { color: "#A09DAE" },
 
   interactionDescription: {
