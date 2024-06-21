@@ -9,6 +9,7 @@ import { DrugInteractionsPage } from "./pages/DrugInteractionsPage";
 import { FoodInteractionsPage } from "./pages/FoodInteractionsPage";
 import { AboutPage } from "./pages/AboutPage";
 import HeaderInfoButton from "./components/HeaderInfoButton";
+import { Disclaimer } from "./components/Disclaimer";
 
 function HomePage({ navigation }) {
   return (
@@ -27,6 +28,7 @@ function HomePage({ navigation }) {
           />
         </View>
       </View>
+      <Disclaimer />
       <StatusBar style="auto" />
     </View>
   );
@@ -36,7 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
+    alignItems: "stretch",
     justifyContent: "center",
 
     padding: 20,
