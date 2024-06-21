@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     borderTopColor: "#343047",
     borderTopWidth: 1,
     paddingTop: 10,
+    flex: 1,
   },
 
   spinner: { paddingTop: 20 },
