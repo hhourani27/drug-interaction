@@ -16,8 +16,8 @@ function HomePage({ navigation }) {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Drug Interaction Browser</Text>
-          <Text style={styles.subtitle}>Pick a page</Text>
+          <Text style={styles.title}>Drug Interaction Checker</Text>
+          <Text style={styles.subtitle}>Browse drugs for interactions</Text>
         </View>
         <View style={styles.buttonContainer}>
           <DrugInteractionButton
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "stretch",
     justifyContent: "center",
-    gap: 30,
+    gap: 60,
   },
   textContainer: {},
   title: {
