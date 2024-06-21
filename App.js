@@ -7,6 +7,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { DrugInteractionsPage } from "./pages/DrugInteractionsPage";
 import { FoodInteractionsPage } from "./pages/FoodInteractionsPage";
+import { AboutPage } from "./pages/AboutPage";
+import HeaderInfoButton from "./components/HeaderInfoButton";
 
 function HomePage({ navigation }) {
   return (
@@ -59,6 +61,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     gap: 20,
   },
+
+  infoIcon: {
+    color: "white",
+  },
+  infoIconPressed: {
+    color: "#F6E7E5",
+  },
 });
 
 const Stack = createNativeStackNavigator();
@@ -66,8 +75,19 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomePage} />
+      <Stack.Navigator
+        screenOptions={{
+          headerTintColor: "white",
+          headerStyle: { backgroundColor: "#F9533B" },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomePage}
+          options={{
+            headerRight: () => <HeaderInfoButton />,
+          }}
+        />
         <Stack.Screen
           name="Drug Interactions"
           component={DrugInteractionsPage}
@@ -76,6 +96,7 @@ export default function App() {
           name="Food Interactions"
           component={FoodInteractionsPage}
         />
+        <Stack.Screen name="About" component={AboutPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
