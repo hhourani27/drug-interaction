@@ -101,7 +101,7 @@ export function DrugInputAutocomplete({ onDrugSelect }) {
 const styles = StyleSheet.create({
   autocompleteContainer: { position: "relative" },
   input: {
-    height: 40,
+    height: 50,
     borderRadius: 10,
     width: "100%",
     borderWidth: 1,
