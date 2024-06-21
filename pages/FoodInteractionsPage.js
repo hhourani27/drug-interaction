@@ -8,11 +8,10 @@ import {
   FlatList,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
-import { DrugInputAutocomplete } from "../components/DrugInputAutocomplete";
-import { DrugChip } from "../components/DrugChip";
 import * as cheerio from "cheerio";
 import { FoodInteractionBox } from "../components/FoodInteractionBox";
 import { Ionicons } from "@expo/vector-icons";
+import { DrugPicker } from "../components/DrugPicker";
 
 export function FoodInteractionsPage() {
   const [selectedDrugs, setSelectedDrugs] = useState([]);
@@ -95,28 +94,10 @@ export function FoodInteractionsPage() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.drugSection}>
-        <DrugInputAutocomplete
-          onDrugSelect={(drug) => {
-            if (!selectedDrugs.find((d) => d.id === drug.id)) {
-              setSelectedDrugs((state) => [...state, drug]);
-            }
-          }}
-        />
-        <View style={styles.selectedDrugList}>
-          {selectedDrugs.map((drug) => (
-            <DrugChip
-              key={drug.id}
-              drugName={drug.name}
-              onDelete={() => {
-                setSelectedDrugs((state) =>
-                  state.filter((d) => d.id !== drug.id)
-                );
-              }}
-            />
-          ))}
-        </View>
-      </View>
+      <DrugPicker
+        selectedDrugs={selectedDrugs}
+        onDrugSelectionChange={setSelectedDrugs}
+      />
       <View style={styles.interactionSection}>
         {loadingInteractions ? (
           <ActivityIndicator style={styles.spinner} />
@@ -167,16 +148,6 @@ const styles = StyleSheet.create({
     gap: 20,
 
     padding: 20,
-  },
-  drugSection: {
-    gap: 10,
-    flexGrow: 0,
-  },
-  selectedDrugList: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    rowGap: 5,
-    columnGap: 10,
   },
 
   interactionSection: {
