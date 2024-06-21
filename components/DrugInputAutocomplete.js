@@ -48,8 +48,10 @@ export function DrugInputAutocomplete({ onDrugSelect }) {
       setLoadingDrugOptions(false);
       setDrugOptions(drugs);
     } catch (error) {
-      setLoadingDrugOptions(false);
-      setDrugOptions([]);
+      if (error.name !== "AbortError") {
+        setLoadingDrugOptions(false);
+        setDrugOptions([]);
+      }
     }
   }, []);
 
