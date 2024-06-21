@@ -11,16 +11,18 @@ import { useState, useEffect, useCallback } from "react";
 import { DrugInputAutocomplete } from "../components/DrugInputAutocomplete";
 import { DrugChip } from "../components/DrugChip";
 import * as cheerio from "cheerio";
-import { DrugInteractionBox } from "../components/DrugInteractionBox";
+import { FoodInteractionBox } from "../components/FoodInteractionBox";
 import { Ionicons } from "@expo/vector-icons";
 
-export function DrugInteractionsPage() {
+export function FoodInteractionsPage() {
   const [selectedDrugs, setSelectedDrugs] = useState([]);
   const [loadingInteractions, setLoadingInteractions] = useState(false);
   const [interactions, setInteractions] = useState(null);
 
   const fetchAndSetInteractions = useCallback(async (selectedDrugs) => {
-    if (selectedDrugs.length < 2) {
+    console.log("fetchAndSetInteractions");
+
+    if (selectedDrugs.length < 1) {
       setInteractions([]);
     } else {
       try {
@@ -46,7 +48,7 @@ export function DrugInteractionsPage() {
 
         // Send request
         const response = await fetch(
-          `https://go.drugbank.com/drug-interaction-checker`,
+          `https://go.drugbank.com/food-interaction-checker`,
           {
             method: "POST",
             headers: {
@@ -59,14 +61,19 @@ export function DrugInteractionsPage() {
 
         // Parse and extract interaction data
         const $ = cheerio.load(responseText);
-        const interactions = $(".interactions-box")
+
+        const interactions = $(".food-interactions tr.success")
           .map((idx, elem) => ({
-            drug1: $(elem).find(".subject").text(),
-            drug2: $(elem).find(".affected").text(),
-            severity: $(elem).find(".severity-badge").text(),
-            description: $(elem).find(".description p").text(),
+            drug: $(elem).find("a").text(),
+            interactions: $(elem)
+              .nextUntil("tr.success")
+              .map((idx, elem) => $(elem).text())
+              .toArray(),
+            // ,
           }))
           .toArray();
+
+        console.log(interactions);
 
         setLoadingInteractions(false);
         setInteractions(interactions);
@@ -79,7 +86,7 @@ export function DrugInteractionsPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedDrugs.length < 2) {
+    if (selectedDrugs.length < 1) {
       setInteractions(null);
     } else {
       fetchAndSetInteractions(selectedDrugs);
@@ -117,7 +124,9 @@ export function DrugInteractionsPage() {
           <FlatList
             contentContainerStyle={{ gap: 10 }}
             data={interactions}
-            renderItem={({ item }) => <DrugInteractionBox interaction={item} />}
+            renderItem={({ item }) => (
+              <FoodInteractionBox foodInteraction={item} />
+            )}
           />
         ) : (
           <View
@@ -131,15 +140,15 @@ export function DrugInteractionsPage() {
               <>
                 <Ionicons name="warning-outline" size={16} />
                 <Text style={{ flex: 1, flexWrap: "wrap" }}>
-                  No interactions were found between these drugs, but it does
-                  not necessarily mean that no interactions exist.
+                  No interactions, but it does not necessarily mean that no
+                  interactions exist.
                 </Text>
               </>
             ) : (
               <>
                 <Ionicons name="information-circle-outline" size={16} />
                 <Text style={{ flex: 1, flexWrap: "wrap" }}>
-                  Select at least 2 drugs to display interactions.
+                  Select at least 1 drug to display interactions.
                 </Text>
               </>
             )}

@@ -6,6 +6,7 @@ import { FoodInteractionButton } from "./components/FoodInteractionButton";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { DrugInteractionsPage } from "./pages/DrugInteractionsPage";
+import { FoodInteractionsPage } from "./pages/FoodInteractionsPage";
 
 function HomePage({ navigation }) {
   return (
@@ -19,7 +20,9 @@ function HomePage({ navigation }) {
           <DrugInteractionButton
             onPress={() => navigation.navigate("Drug Interactions")}
           />
-          <FoodInteractionButton />
+          <FoodInteractionButton
+            onPress={() => navigation.navigate("Food Interactions")}
+          />
         </View>
       </View>
       <StatusBar style="auto" />
@@ -68,6 +71,10 @@ export default function App() {
         <Stack.Screen
           name="Drug Interactions"
           component={DrugInteractionsPage}
+        />
+        <Stack.Screen
+          name="Food Interactions"
+          component={FoodInteractionsPage}
         />
       </Stack.Navigator>
     </NavigationContainer>

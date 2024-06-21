@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 
-export function InteractionBox({ interaction }) {
+export function DrugInteractionBox({ interaction }) {
   return (
     <View
       style={[
