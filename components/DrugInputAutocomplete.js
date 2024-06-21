@@ -86,6 +86,7 @@ export function DrugInputAutocomplete({ onDrugSelect }) {
             data={drugOptions}
             renderItem={({ item }) => renderItem(item)}
             keyExtractor={(item) => item.id}
+            keyboardShouldPersistTaps="always"
           />
         )
       ) : (
