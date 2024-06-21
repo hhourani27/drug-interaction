@@ -121,8 +121,8 @@ export function FoodInteractionsPage() {
               <>
                 <Ionicons name="warning-outline" size={16} />
                 <Text style={{ flex: 1, flexWrap: "wrap" }}>
-                  No interactions, but it does not necessarily mean that no
-                  interactions exist.
+                  No interactions were found, but it does not necessarily mean
+                  that no interactions exist.
                 </Text>
               </>
             ) : (
