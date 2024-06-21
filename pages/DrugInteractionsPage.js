@@ -12,6 +12,7 @@ import { DrugInputAutocomplete } from "../components/DrugInputAutocomplete";
 import { DrugChip } from "../components/DrugChip";
 import * as cheerio from "cheerio";
 import { InteractionBox } from "../components/InteractionBox";
+import { Ionicons } from "@expo/vector-icons";
 
 export function DrugInteractionsPage() {
   const [selectedDrugs, setSelectedDrugs] = useState([]);
@@ -118,7 +119,32 @@ export function DrugInteractionsPage() {
             data={interactions}
             renderItem={({ item }) => <InteractionBox interaction={item} />}
           />
-        ) : null}
+        ) : (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            {interactions && interactions.length === 0 ? (
+              <>
+                <Ionicons name="warning-outline" size={16} />
+                <Text style={{ flex: 1, flexWrap: "wrap" }}>
+                  No interactions were found between these drugs, but it does
+                  not necessarily mean that no interactions exist.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Ionicons name="information-circle-outline" size={16} />
+                <Text style={{ flex: 1, flexWrap: "wrap" }}>
+                  Select at least 2 drugs to display interactions.
+                </Text>
+              </>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -145,7 +171,7 @@ const styles = StyleSheet.create({
   },
 
   interactionSection: {
-    borderTopColor: "#F9533B",
+    borderTopColor: "#343047",
     borderTopWidth: 1,
     paddingTop: 10,
   },
