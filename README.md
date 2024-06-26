@@ -16,14 +16,14 @@ This app uses data uses [DrugBank Online](https://go.drugbank.com/)'s API for dr
 - Display drug-food interactions
 
 <div style="display: flex; flex-direction: row; justify-content: center; margin-bottom: 20px;">
-  <img src="screenshots/record.gif" width="150"  alt="Drug-food interactions" >
+  <img src="screenshots/record.gif" width="300"  alt="Drug-food interactions" >
 </div>
 
 <div style="display: flex; flex-direction: row;">
-  <img src="screenshots/screen1.jpg" alt="Home" width="150"  style="margin-right: 20px;">
-  <img src="screenshots/screen2.jpg" alt="Search drugs" width="150"  style="margin-right: 20px;" >
-  <img src="screenshots/screen3.jpg" alt="Drug-drug interactions" width="150"  style="margin-right: 20px;" >
-  <img src="screenshots/screen4.jpg" alt="Drug-food interactions" width="150"   style="margin-right: 20px;">
+  <img src="screenshots/screen1.jpg" alt="Home" width="200"  style="margin-right: 20px;">
+  <img src="screenshots/screen2.jpg" alt="Search drugs" width="200"  style="margin-right: 20px;" >
+  <img src="screenshots/screen3.jpg" alt="Drug-drug interactions" width="200"  style="margin-right: 20px;" >
+  <img src="screenshots/screen4.jpg" alt="Drug-food interactions" width="200"   style="margin-right: 20px;">
 </div>
 
 ## Project structure
